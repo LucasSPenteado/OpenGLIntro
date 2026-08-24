@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="OpenGLIntro/OpenGLIntro.vcxproj" Id="c2339746-1b8c-4192-9fb6-ccc3252f15ee" />
+</Solution>
