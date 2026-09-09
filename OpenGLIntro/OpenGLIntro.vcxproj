@@ -148,11 +148,16 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="STB_IAMGE_IMPLEMENTATION.cpp" />
     <ClInclude Include="shader_s.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="3.3.shader.fs" />
     <None Include="3.3.shader.vs" />
+    <None Include="3.3.shaderYellow.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="container.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

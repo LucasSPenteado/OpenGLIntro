@@ -1,6 +1,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stbimage/stb_image.h"
+
 #include "shader_s.h"
 
 #include <iostream>
@@ -95,8 +98,11 @@ int main()
 
 	//glDeleteShader(vertexShader);
 	//glDeleteShader(fragmentShader);
+	//----------------------------------------------------------------------------------------//	
 
-	//----------------------------------------------------------------------------------------//
+	Shader ourShader("3.3.shader.vs", "3.3.shader.fs");
+
+	//Shader ourShader2("3.3.shader.vs", "3.3.shaderYellow.fs");
 
 	//Coordinates for two tringles to form a rectangle
 	//float vertices[] = {
@@ -108,26 +114,38 @@ int main()
 
 	//Single triangle
 	//float vertices[] = {
-	//	-0.5f, -0.5f, 0.0f,
 	//	0.5f, -0.5f, 0.0f,
+	//	-0.5f, -0.5f, 0.0f,
 	//	0.0f,  0.5f, 0.0f
 	//};
 
-	Shader ourShader("3.3.shader.vs", "3.3.shader.fs");
+	//Second triangle
+	//float vertices2[] = {
+	//	0.0f, -0.5f, 0.0f,
+	//	0.9f, -0.5f, 0.0f,
+	//	0.45f,  0.5f, 0.0f
+	//};
 
 	//Single triangle with color data
+	//float vertices[] = {
+	//	// positions         // colors
+	//	 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   //bottom right
+	//	-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   //bottom left
+	//	 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,   //top
+	//};
+
 	float vertices[] = {
-		//First Triangle
-		// positions         // colors
-		 0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-		 0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,    // top
+		// positions          // colors           // texture coords
+		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
 	};
 
 	//---------Vertices for the second triangle used in the exercise---------------//
 	//float vertices2[] = {
 	//	//Second Triangle
-	//	 //positions		   //colors	
+	//	//positions		     //colors	
 	//	 0.0f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
 	//	 0.9f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
 	//	 0.45f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  //top
@@ -135,61 +153,87 @@ int main()
 	//----------------------------------------------------------------------------//
 
 	//to draw both triangles to form a rectangle without passing at the same point twice
-	//unsigned int indices[] = {
-	//	0, 1, 3,
-	//	1, 2, 3
-	//};
+	unsigned int indices[] = {
+		0, 1, 3,
+		1, 2, 3
+	};
 
 	//---------------Exercise to draw two triangles using different VAO and VBO's---------------//
 	//unsigned int VBOs[2], VAOs[2];
 	//glGenVertexArrays(2, VAOs);
 	//glGenBuffers(2, VBOs);
 
-	//// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+	//bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 	//glBindVertexArray(VAOs[0]);
 	//glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	//// position attribute
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	//glEnableVertexAttribArray(1);
-	//// color attribute
+	//position attribute
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	//glEnableVertexAttribArray(0);
+	//color attribute
 	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	//glEnableVertexAttribArray(0);
 
-	////Second VAO and VBO
+	//Second VAO and VBO
 	//glBindVertexArray(VAOs[1]);
 	//glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
 	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
-	//// position attribute
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	//glEnableVertexAttribArray(1);
-	//// color attribute
+	//position attribute
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	//glEnableVertexAttribArray(0);
+	//color attribute
 	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	//glEnableVertexAttribArray(0);
 	//------------------------------------------------------------------------------------------//
 
-	unsigned int VBO, VAO;
+	unsigned int VBO, VAO, EBO;
+	glGenBuffers(1, &EBO);
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	// color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	//position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	//color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	//texture attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	//To only show the outline of the vertices
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	//set the texture wrapping/filtering options
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//load and generate texture
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+	if (data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std::cout << "Failed to load texture" << std::endl;
+	}
+
+	stbi_image_free(data);
 
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
-
+		
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -201,14 +245,19 @@ int main()
 		//---------------------------------------------------------//
 
 		ourShader.use();
-
+		//ourShader.setFloat("xOffset", 0.5f); used for exercise
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 
 		//--------Binded multiple VAOs and VBOs----------//
+		//ourShader.use();
 		//glBindVertexArray(VAOs[0]);
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		//ourShader2.use();
 		//glBindVertexArray(VAOs[1]);
 		//glDrawArrays(GL_TRIANGLES, 0, 3);
 		//----------------------------------------------//
@@ -222,7 +271,8 @@ int main()
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 
-	//glDeleteVertexArrays(2, VAOs); used when created both VAOs and VBOs
+	//used when created both VAOs and VBOs
+	//glDeleteVertexArrays(2, VAOs);
 	//glDeleteBuffers(2, VBOs);
 
 	glfwTerminate();
